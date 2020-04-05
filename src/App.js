@@ -1,25 +1,70 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+// import "./App.css";
+import { BrowserRouter, Route, Switch } from "react-router-dom";
+
+// import Home from "./pages/home/home";
+// import About from "./pages/home/about";
+// import ListMovie from "./pages/home/list-movie";
+import PageNotFound from "./pages/page-not-found";
+import { routesHome, routesAdmin } from "./routes";
+import HomeTemplate from "./templates/HomeTemplate";
+import AdminTemplate from "./templates/AdminTemplate";
+import Admin from "./pages/admin/admin";
+import ModalLogin from './components/modal-login'
+
+
+const showMenuHome = routes => {
+  if (routes && routes.length > 0) {
+    return routes.map((item, index) => {
+      return (
+        <HomeTemplate
+          key={index}
+          path={item.path}
+          exact={item.exact}
+          Component={item.component}
+        />
+      );
+    });
+  }
+};
+
+const showMenuAdmin = routes => {
+  if (routes && routes.length > 0) {
+    return routes.map((item, index) => {
+      return (
+        <AdminTemplate
+          key={index}
+          path={item.path}
+          exact={item.exact}
+          Component={item.component}
+        />
+      );
+    });
+  }
+};
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <BrowserRouter>
+      <div>
+        <ModalLogin />
+        <Switch>
+          {showMenuHome(routesHome)}
+          {showMenuAdmin(routesAdmin)}
+
+          {/* Trang chu */}
+          {/* <Route path="/" exact component={Home} /> */}
+          {/* Trang About */}
+          {/* <Route path="/about" component={About} /> */}
+          {/* Trang ListMovie */}
+          {/* <Route path="/list-movie" component={ListMovie} /> */}
+
+          <Route path="/admin" component={Admin} />
+          {/* Trang PageNotFound - để cuối cùng*/}
+          <Route path="" component={PageNotFound} />
+        </Switch>
+      </div>
+    </BrowserRouter>
   );
 }
 
