@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 // import { Container, Hidden } from '@material-ui/core';
 import { MAIN_COLOR } from '../../constants/color'
+import { NavLink, Link } from "react-router-dom";
+
+import { FaRegThumbsUp, FaRegThumbsDown, FaRegCommentDots, FaRegUserCircle } from 'react-icons/fa';
 
 class home extends Component {
 
@@ -79,12 +82,44 @@ class home extends Component {
 
                       <div style={{ marginLeft: 10, flex: 1 }}>
 
-                        <a style={{ margin: 0, fontSize: 18, color: MAIN_COLOR, fontWeight: '500' }} href="">
-                          {item.title}
-                        </a>
+                        {/* <a style={{ margin: 0, fontSize: 18, color: MAIN_COLOR, fontWeight: '500' }} href="">
+
+                        </a> */}
+
+                        <Link
+                          style={{ margin: 0, fontSize: 18, color: MAIN_COLOR, fontWeight: '500' }}
+                          to="/info-post/100">{item.title}</Link>
                         <p>
                           {item.description}
                         </p>
+
+                        <div style={{ display: 'flex', flexDirection: 'row' }}>
+                          <div style={{ display: 'flex', alignItems: 'center' }}>
+                            <FaRegThumbsUp style={{ marginRight: 10 }} />
+                            100
+                          </div>
+
+                          <div style={{ display: 'flex', alignItems: 'center', marginLeft: 20 }}>
+                            <FaRegThumbsDown style={{ marginRight: 10 }} />
+                            100
+                          </div>
+
+                          <div style={{ display: 'flex', alignItems: 'center', marginLeft: 20 }}>
+                            <FaRegCommentDots style={{ marginRight: 10 }} />
+                            100
+                          </div>
+
+                          <div style={{ display: 'flex', flex: 1, alignItems: 'center', marginRight: 20, justifyContent: 'flex-end' }}>
+                            <FaRegUserCircle style={{ marginRight: 10 }} />
+                            <p style={{
+                              color: '#000000',
+                              fontWeight: 'bold',
+                              fontStyle: 'italic',
+                              margin: 0
+                            }}>Fullname User</p>
+                          </div>
+                        </div>
+
                       </div>
 
                     </div>
@@ -101,8 +136,8 @@ class home extends Component {
 
 
             <div className="col-4">
-              
-              
+
+
             </div>
           </div>
         </div>
