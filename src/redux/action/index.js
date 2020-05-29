@@ -1,20 +1,29 @@
 import * as ActionType from "./../constants/ActionType";
 import Axios from "axios";
 import Store from '../store'
+import {BASE_URL}from '../../constants/url'
 
 
 export const _refreshToken = () => {
   let tokenStorage = localStorage.getItem('token')
-  if (tokenStorage == "1e2g4b") {
+
+  Axios({
+    method: "GET",
+    url: `${BASE_URL}/users/me/`,
+    headers: {
+      'Authorization': `Token ${tokenStorage}`
+    }
+  }).then(res => {
     Store.dispatch({
       type: ActionType.REFRESH_TOKEN_SUCCESS,
-      payload: {
-        fullname: "Lê Thành An",
-        age: 21,
-        job: "IT"
-      }
+      payload: res.data
     })
-  }
+
+  }).catch(err => {
+    console.log(err);
+
+  })
+
 }
 
 

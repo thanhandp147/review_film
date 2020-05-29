@@ -10,7 +10,9 @@ import { routesHome, routesAdmin } from "./routes";
 import HomeTemplate from "./templates/HomeTemplate";
 import AdminTemplate from "./templates/AdminTemplate";
 import Admin from "./pages/admin/admin";
-import ModalLogin from './components/modal-login'
+import ModalLogin from './components/modal-login';
+import ModalSignin from './components/modal-signin';
+
 
 
 const showMenuHome = routes => {
@@ -48,6 +50,7 @@ function App() {
     <BrowserRouter>
       <div>
         <ModalLogin />
+        <ModalSignin />
         <Switch>
           {showMenuHome(routesHome)}
           {showMenuAdmin(routesAdmin)}

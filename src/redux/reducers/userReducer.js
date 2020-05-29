@@ -4,7 +4,8 @@ let initialState = {
     infoUser: {
 
     },
-    isShowModalLogin: false
+    isShowModalLogin: false,
+    isShowModalSignin:false
 };
 
 const userReducer = (state = initialState, action) => {
@@ -29,10 +30,21 @@ const userReducer = (state = initialState, action) => {
                 ...state,
                 isShowModalLogin: true
             }
+        case ActionType.SHOW_MODAL_SIGNIN:
+            return {
+                ...state,
+                isShowModalLogin:false,
+                isShowModalSignin: true
+            }
         case ActionType.HIDE_MODAL_LOGIN:
             return {
                 ...state,
                 isShowModalLogin: false
+            }
+        case ActionType.HIDE_MODAL_SIGNIN:
+            return {
+                ...state,
+                isShowModalSignin: false
             }
         default:
             return { ...state };

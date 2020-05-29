@@ -9,15 +9,13 @@ import { login } from '../../src/services/api'
 import { handleApi } from '../services/utils';
 import Axios from "axios";
 import { BASE_URL } from '../constants/url';
-class modalogin extends Component {
+class modasignin extends Component {
     constructor() {
         super();
         this.state = {
             error: false,
             message: "",
             show: true,
-            username: "",
-            password: "",
         }
     }
 
@@ -28,6 +26,34 @@ class modalogin extends Component {
         })
     }
 
+
+    _handleConfirmSignin = () => {
+        let { email, username, password, firstName, lastName } = this.state
+        if (!email || !username || !password || !firstName || !lastName) {
+            return this.setState({
+                error: true,
+                message: "Vui lòng điền đầy đủ thông tin"
+            })
+        }
+        Axios({
+            method: "POST",
+            url: `${BASE_URL}/users/register/`,
+            data: {
+                email, username, password, firstName, lastName
+            }
+        }).then(res => {
+            alert('Đăng kí thành công')
+            Store.dispatch({
+                type: ActionType.HIDE_MODAL_SIGNIN,
+                payload: null
+            })
+
+        }).catch(err => {
+            alert(' Đăng kí thất bại, vui lòng thử lại')
+
+        })
+
+    }
 
 
     _handleConfirmLogin = async () => {
@@ -44,36 +70,7 @@ class modalogin extends Component {
             url: `${BASE_URL}/users/login/`,
             data: { username, password }
         }).then(res => {
-            if (res.data.token) {
-                localStorage.setItem("token", res.data.token)
-                Axios({
-                    method: "GET",
-                    url: `${BASE_URL}/users/me/`,
-                    headers: {
-                        'Authorization': `Token ${res.data.token}`
-                    }
-                }).then(res => {
-                    console.log(res.data);
-                    Store.dispatch({
-                        type: ActionType.LOGIN_SUCCESS,
-                        payload: res.data
-                    })
-
-                    alert("Đăng nhập thành công")
-                    this.handleClose()
-                    this.setState({
-                        error: false,
-                        message: "",
-                        show: true,
-                        username: '',
-                        password: ""
-                    })
-
-                }).catch(err => {
-                    console.log(err);
-
-                })
-            }
+            console.log({ ...res });
 
         }).catch(err => {
             this.setState({
@@ -121,19 +118,14 @@ class modalogin extends Component {
 
     handleClose = () => {
         Store.dispatch({
-            type: ActionType.HIDE_MODAL_LOGIN,
+            type: ActionType.HIDE_MODAL_SIGNIN,
             payload: null
         })
     }
 
     _handleSignin = () => {
-        // Store.dispatch({
-        //     type: ActionType.HIDE_MODAL_LOGIN,
-        //     payload: null
-        // })
-        Store.dispatch({
-            type: ActionType.SHOW_MODAL_SIGNIN,
-            payload: null
+        this.setState({
+            isSignIn: true
         })
     }
 
@@ -202,14 +194,23 @@ class modalogin extends Component {
             //     </div>
             // </div>
             <>
-                <Modal show={this.props.isShowModalLogin} onHide={this.handleClose}>
+                <Modal show={this.props.isShowModalSignin} onHide={this.handleClose}>
                     <Modal.Header closeButton>
-                        <Modal.Title>Đăng nhập</Modal.Title>
+                        <Modal.Title>Đăng ki</Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
                         {/* <form> */}
                         <div className="form-group">
-                            <label htmlFor="">Tên tài khoản</label>
+                            <label htmlFor="">Email</label>
+                            <input
+                                type="text"
+                                className="form-control"
+                                name="email"
+                                onChange={this.handleOnChange}
+                            />
+                        </div>
+                        <div className="form-group">
+                            <label htmlFor="">Username</label>
                             <input
                                 type="text"
                                 className="form-control"
@@ -218,11 +219,29 @@ class modalogin extends Component {
                             />
                         </div>
                         <div className="form-group">
-                            <label htmlFor="">Mật khẩu</label>
+                            <label htmlFor="">Password</label>
                             <input
                                 type="text"
                                 className="form-control"
                                 name="password"
+                                onChange={this.handleOnChange}
+                            />
+                        </div>
+                        <div className="form-group">
+                            <label htmlFor="">First Name</label>
+                            <input
+                                type="text"
+                                className="form-control"
+                                name="firstName"
+                                onChange={this.handleOnChange}
+                            />
+                        </div>
+                        <div className="form-group">
+                            <label htmlFor="">Last Name</label>
+                            <input
+                                type="text"
+                                className="form-control"
+                                name="lastName"
                                 onChange={this.handleOnChange}
                             />
                         </div>
@@ -238,10 +257,10 @@ class modalogin extends Component {
                             display: 'flex',
                         }}>
 
-                            <button onClick={this._handleConfirmLogin} style={{ backgroundColor: MAIN_COLOR, color: '#FFFFFF' }} className="btn">
-                                Đăng nhập
+                            <button onClick={this._handleConfirmSignin} style={{ backgroundColor: MAIN_COLOR, color: '#FFFFFF' }} className="btn">
+                                Xác nhận
                                     </button>
-                            <div style={{
+                            {/* <div style={{
                                 display: 'flex',
                                 justifyContent: 'center',
                                 alignItems: 'center',
@@ -253,7 +272,7 @@ class modalogin extends Component {
                                     style={{ borderColor: MAIN_COLOR, borderWidth: 1 }} className="btn btn-outline">
                                     Đăng kí
                                     </button>
-                            </div>
+                            </div> */}
                         </div>
                     </Modal.Body>
                 </Modal>
@@ -263,8 +282,8 @@ class modalogin extends Component {
 }
 
 const mapStateToProps = state => ({
-    isShowModalLogin: state.userReducer.isShowModalLogin
+    isShowModalSignin: state.userReducer.isShowModalSignin
 });
 
 
-export default connect(mapStateToProps, null)(modalogin);
+export default connect(mapStateToProps, null)(modasignin);

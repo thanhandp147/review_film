@@ -21,6 +21,8 @@ import '../../../node_modules/bootstrap/dist/css/bootstrap.css';
 
 import ImageUploader from 'react-images-upload';
 import { MAIN_COLOR } from '../../constants/color';
+import Axios from 'axios';
+import { BASE_URL } from '../../constants/url'
 
 class App extends React.Component {
     constructor() {
@@ -64,9 +66,49 @@ class App extends React.Component {
         })
     }
     _handleConfirmPost = () => {
+
+
+        let tokenStorage = localStorage.getItem('token')
+        console.log(tokenStorage);
+
         console.log(this.state);
         this.setState({
-            show:true
+            show: true
+        })
+
+        let bodyFormData = new FormData();
+
+        bodyFormData.append('nameFilm', this.state.title);
+        bodyFormData.append('title', this.state.desciption)
+        bodyFormData.append('content', this.state.stringOutput)
+        bodyFormData.append('picture', this.state.pictures[0])
+
+        
+        
+
+        Axios({
+            method: "POST",
+            url: `${BASE_URL}/posts/create/`,
+            // data: {
+            //     nameFilm: this.state.title,
+            //     title: this.state.desciption,
+            //     content: this.state.stringOutput
+            // },
+            data: bodyFormData,
+            headers: {
+                'Authorization': `Token ${tokenStorage}`,
+                'Content-Type': 'multipart/form-data'
+            }
+
+        }).then(res => {
+
+            console.log(res.data);
+
+        }).catch(err => {
+            console.log(bodyFormData);
+            
+            console.log({ ...err });
+
         })
     }
 
@@ -148,7 +190,7 @@ class App extends React.Component {
                         </div>
                     }
                 </div>
-                
+
 
             </div >
         );

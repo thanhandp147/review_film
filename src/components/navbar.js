@@ -38,6 +38,7 @@ class navbar extends Component {
       return e.preventDefault()
     }
   }
+
   _handleOpenModalLogin = () => {
     Store.dispatch({
       type: ActionType.SHOW_MODAL_LOGIN,
@@ -118,11 +119,11 @@ class navbar extends Component {
                 </button>
             } */}
             {
-              this.props.infoUser && this.props.infoUser.fullname !== undefined ?
+              this.props.infoUser && this.props.infoUser.username !== undefined ?
                 <ul style={{ marginLeft: 60 }} class="navbar-nav">
                   <li className="nav-item dropdown">
                     <a className="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                      {`Xin chào ${this.props.infoUser.fullname}`}
+                      {`Xin chào ${this.props.infoUser.last_name}`}
                     </a>
                     <div className="dropdown-menu" aria-labelledby="navbarDropdown">
                       <a onClick={this._handleLogout} class="dropdown-item" href="#">

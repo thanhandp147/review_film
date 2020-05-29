@@ -4,6 +4,8 @@ import { MAIN_COLOR } from '../../constants/color'
 import { connect } from 'react-redux'
 
 import { FaRegThumbsUp } from 'react-icons/fa';
+import Axios from 'axios'
+import { BASE_URL } from '../../constants/url'
 
 class InfoPost extends Component {
 
@@ -19,12 +21,35 @@ class InfoPost extends Component {
         console.log(this.props.match.params);
         let _idPost = this.props.match.params.id
 
-        if (_idPost == 100) {
+        let tokenStorage = localStorage.getItem('token')
+        Axios({
+            method: "GET",
+            url: `${BASE_URL}/posts/${_idPost}`,
+            headers: {
+                'Authorization': `Token ${tokenStorage}`,
+                "Content-Type": "application/json"
+            }
+
+        }).then(res => {
+
+            console.log(res.data.data);
             this.setState({
-                infoPost: INFOPOST
+                infoPost: res.data.data
             })
 
-        }
+        }).catch(err => {
+
+            // console.log(err.response.data );
+            console.log({ ...err });
+
+        })
+
+        // if (_idPost == 100) {
+        //     this.setState({
+        //         infoPost: INFOPOST
+        //     })
+
+        // }
 
     }
 
@@ -76,7 +101,7 @@ class InfoPost extends Component {
                                     fontSize: 22,
                                     color: MAIN_COLOR,
                                     marginBottom: 20
-                                }}>[Review] - {infoPost.title}</p>
+                                }}>[Review] - {infoPost.nameFilm}</p>
                             </div>
 
                             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -100,7 +125,7 @@ class InfoPost extends Component {
 
                             <div
                                 style={{ marginTop: 20 }}
-                                dangerouslySetInnerHTML={{ __html: infoPost.stringOutput }}>
+                                dangerouslySetInnerHTML={{ __html: infoPost.content }}>
 
                             </div>
 
@@ -115,7 +140,10 @@ class InfoPost extends Component {
                                 fontWeight: 'bold',
                                 marginTop: 20
                             }}>
-                                {infoPost.totalCmt} Bình luận
+                                {infoPost && infoPost.commentCount} Bình luận
+                                {
+                                    // infoPost && infoPost.comments.length && `alo`
+                                }
                             </p>
 
                             <div style={{ flexDirection: "row", display: "flex" }}>
