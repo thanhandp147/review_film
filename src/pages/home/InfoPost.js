@@ -3,9 +3,12 @@ import React, { Component } from 'react';
 import { MAIN_COLOR } from '../../constants/color'
 import { connect } from 'react-redux'
 
-import { FaRegThumbsUp } from 'react-icons/fa';
+import { FaRegThumbsUp, FaCentercode } from 'react-icons/fa';
 import Axios from 'axios'
-import { BASE_URL } from '../../constants/url'
+import { BASE_URL, BASE_URL_AVATAR } from '../../constants/url'
+import BackGroundSlider from '../../image/slider-bg.jpg'
+import moment from 'moment';
+import { FaThumbsUp } from 'react-icons/fa';
 
 class InfoPost extends Component {
 
@@ -22,19 +25,31 @@ class InfoPost extends Component {
         let _idPost = this.props.match.params.id
 
         let tokenStorage = localStorage.getItem('token')
+
+        let Authorization
+        if (tokenStorage) {
+            Authorization = `Token ${tokenStorage}`
+        } else {
+            Authorization = null
+        }
+
         Axios({
             method: "GET",
             url: `${BASE_URL}/posts/${_idPost}`,
             headers: {
-                'Authorization': `Token ${tokenStorage}`,
+                'Authorization': Authorization,
                 "Content-Type": "application/json"
             }
 
         }).then(res => {
 
             console.log(res.data.data);
+
+            let isLiked = res.data.data.userLikes.find(item => item == this.props.infoUser.id)
+
             this.setState({
-                infoPost: res.data.data
+                infoPost: res.data.data,
+                isLiked
             })
 
         }).catch(err => {
@@ -63,152 +78,293 @@ class InfoPost extends Component {
         if (!inputOfComment) {
             return alert('Vui lòng điền vào ')
         }
-        let newCmt = {
-            avatar: "",
-            fullname: this.props.infoUser.fullname,
-            content: inputOfComment
+
+        let tokenStorage = localStorage.getItem('token')
+
+        let Authorization
+        if (tokenStorage) {
+            Authorization = `Token ${tokenStorage}`
+        } else {
+            alert('Bạn cần phải đăng nhập để thực hiện chức năng này')
+            return Authorization = null
         }
 
-        let listCmtOwnTemp = [...this.state.listCmtOwn]
-        listCmtOwnTemp.unshift(newCmt)
+        Axios({
+            method: "POST",
+            url: `${BASE_URL}/posts/create-comment/`,
+            headers: {
+                'Authorization': Authorization,
+                "Content-Type": "application/json"
+            },
+            data: { postId: this.state.infoPost.id, content: inputOfComment }
+        }).then(res => {
+            console.log({ ...res })
+            let newCmt = {
+                createdAt: moment().format('DD/MM/YYYY HH:mm'),
+                avatar: "",
+                user: `${this.props.infoUser.first_name} ${this.props.infoUser.last_name}`,
+                content: res.data.content
+            }
 
-        this.setState({
-            listCmtOwn: listCmtOwnTemp,
-            inputOfComment: ''
-        }, () => {
+            let listCmtOwnTemp = [...this.state.listCmtOwn]
+            listCmtOwnTemp.unshift(newCmt)
+
+            let infoPostTemp = { ...this.state.infoPost }
+            infoPostTemp.commentCount = infoPostTemp.commentCount + 1
+
+            this.setState({
+                listCmtOwn: listCmtOwnTemp,
+                inputOfComment: '',
+                infoPost: infoPostTemp
+            })
+        }).catch(err => {
+            console.log({ ...err });
+        })
 
 
+    }
+
+    _handleLikePost = () => {
+        let tokenStorage = localStorage.getItem('token')
+        let Authorization
+        if (tokenStorage) {
+            Authorization = `Token ${tokenStorage}`
+        } else {
+            alert('Bạn cần phải đăng nhập để thực hiện chức năng này')
+            return Authorization = null
+        }
+        Axios({
+            method: "POST",
+            url: `${BASE_URL}/posts/create-like/`,
+            headers: {
+                'Authorization': Authorization,
+                "Content-Type": "application/json"
+            },
+            data: { postId: this.state.infoPost.id }
+        }).then(res => {
+            console.log({ ...res })
+            let infoPostTemp = { ...this.state.infoPost }
+            infoPostTemp.like = infoPostTemp.like + 1
+            this.setState({
+                isLiked: true,
+                infoPost: infoPostTemp
+            })
+        }).catch(err => {
+            console.log({ ...err });
         })
     }
+
+    _handleUnPost = () => {
+        let tokenStorage = localStorage.getItem('token')
+        let Authorization
+        if (tokenStorage) {
+            Authorization = `Token ${tokenStorage}`
+        } else {
+            alert('Bạn cần phải đăng nhập để thực hiện chức năng này')
+            return Authorization = null
+        }
+        Axios({
+            method: "DELETE",
+            url: `${BASE_URL}/posts/cancel-like/`,
+            headers: {
+                'Authorization': Authorization,
+                "Content-Type": "application/json"
+            },
+            data: { postId: this.state.infoPost.id }
+        }).then(res => {
+            if (res.data.status == true) {
+                let infoPostTemp = { ...this.state.infoPost }
+                infoPostTemp.like = infoPostTemp.like - 1
+
+                this.setState({
+                    isLiked: false,
+                    infoPost: infoPostTemp
+                })
+            }
+
+        }).catch(err => {
+            console.log({ ...err });
+        })
+    }
+
 
 
     render() {
         const { listPostMovie, infoPost, listCmtOwn } = this.state
         return (
-            <div style={{ backgroundColor: '#e8e8e8' }}>
+            <div style={{ backgroundColor: '#020d18' }}>
                 <div style={{ height: 70 }}></div>
-                <div className="container">
-                    <div className="row">
+                <div style={{ backgroundImage: `url(${BackGroundSlider})`, height: 150, objectFit: 'cover' }}></div>
+                <div className="container" style={{backgroundColor:'#fff', borderRadius:20, marginTop:20}}>
+                    <div style={{padding:100}}>
+                        <h1 style={{
+                            marginTop: 20,
+                            marginBottom: 20
+                        }}>
+                            {infoPost.nameFilm}
+                        </h1>
 
-                        <div style={styles.backgroundColor} className="col-8">
-                            {/* LEFT */}
-                            <div style={{
-                                display: 'flex',
-                                // justifyContent: "center",
-                            }}>
-                                <p style={{
-                                    margin: 0,
-                                    fontSize: 22,
-                                    color: MAIN_COLOR,
-                                    marginBottom: 20
-                                }}>[Review] - {infoPost.nameFilm}</p>
-                            </div>
-
-                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                <p style={{ padding: 0 }}>
-                                    Đăng lúc {infoPost.createAt} bởi {infoPost.author}
-                                </p>
-
-                                <div style={{ display: 'flex' }}>
-                                    <button
-                                        className="btn btn-primary my-2 my-sm-0"
-                                        style={{ margin: 20 }}>
-                                        Thích
-                                </button>
-
-                                    <button
-                                        className="btn btn-primary my-2 my-sm-0">
-                                        Chia sẻ
-                                </button>
-                                </div>
-                            </div>
-
-                            <div
-                                style={{ marginTop: 20 }}
-                                dangerouslySetInnerHTML={{ __html: infoPost.content }}>
-
-                            </div>
-
-                            <div style={{
-                                width: "100%",
-                                height: 1,
-                                backgroundColor: '#000000'
-                            }} />
-
-                            <p style={{
-                                fontSize: 20,
-                                fontWeight: 'bold',
-                                marginTop: 20
-                            }}>
-                                {infoPost && infoPost.commentCount} Bình luận
-                                {
-                                    // infoPost && infoPost.comments.length && `alo`
-                                }
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                            <p style={{ padding: 0, color:'#dd003f'}}>
+                                Đăng lúc {moment(infoPost.createdAt).format('L')}
+                                {` bởi ${infoPost.user?.firstName} ${infoPost.user?.lastName}`}
                             </p>
 
-                            <div style={{ flexDirection: "row", display: "flex" }}>
-                                <div style={{
-                                    width: 50,
-                                    height: 50,
-                                    backgroundColor: "#828282"
-                                }}>
+                            {/* <div style={{ display: 'flex', alignItems: 'center', color: 'red' }}>
 
-                                </div>
-                                <input
-                                    value={this.state.inputOfComment}
-                                    onChange={this._handleOnchangeCmt}
-                                    placeholder="Thêm bình luận ... "
-                                    style={{
-                                        flex: 1,
-                                        marginLeft: 5,
-                                        paddingLeft: 10
-                                    }}
-                                />
-                                <button
-                                    className="btn btn-primary my-2 my-sm-0"
-                                    style={{ margin: 5 }}
-                                    onClick={this._handleSubmitComment}
-                                >
-                                    Đăng
-                                </button>
+                                100
+                              </div> */}
+
+
+                            <div style={{ display: 'flex' }}>
+                                {
+                                    this.state.isLiked ?
+                                        <button
+                                            onClick={this._handleUnPost}
+                                            className="btn "
+                                            style={{ margin: 20 , backgroundColor:'#f5b50c', color:'#fff', fontWeight:'bold', boxShadow:'none', outline:'none'}}>
+                                            Đã thích
+                                        </button>
+                                        :
+                                        <button
+                                            onClick={this._handleLikePost}
+                                            className="btn"
+                                            style={{ margin: 20 , backgroundColor:'#395180', color:'#fff', fontWeight:'bold', boxShadow:'none', outline:'none'}}>
+                                            Thích
+                                        </button>
+                                }
+
                             </div>
-
-                            {
-                                listCmtOwn && listCmtOwn.length > 0 &&
-                                listCmtOwn.map((item, index) => {
-                                    return (
-                                        <ItemCmt key={index}
-                                            // avatar={item.avatar}
-                                            fullname={item.fullname}
-                                            content={item.content}
-                                        />
-                                    )
-                                })
-                            }
-
-                            {
-                                infoPost && infoPost.listCmtOfPost && infoPost.listCmtOfPost.length &&
-                                infoPost.listCmtOfPost.map((item, index) => {
-                                    return (
-                                        <ItemCmt key={index}
-                                            avatar={item.avatar}
-                                            fullname={item.fullname}
-                                            content={item.content}
-                                        />
-                                    )
-                                })
-                            }
-
-
-                            <div style={{ height: 50 }} />
                         </div>
+
+                        <div style={{ display: 'flex', flexDirection: 'row' }}>
+                            <FaThumbsUp style={{ color: '#f5b50c', marginRight: 10, fontSize: 20, marginTop: 5 }} />
+                            <h4 style={{ margin: 0 }}>{
+                                this.state.infoPost.like
+                            }</h4>
+                        </div>
+
+                        <div
+                            style={{ marginTop: 20 }}
+                            dangerouslySetInnerHTML={{ __html: infoPost.content }}>
+
+                        </div>
+
+                        <div style={{
+                            width: "100%",
+                            height: 0.25,
+                            backgroundColor: '#e4eaf0',
+                            marginTop:50
+                        }} />
+
+                        <p style={{
+                            fontSize: 20,
+                            fontWeight: 'bold',
+                            marginTop: 20
+                        }}>
+                            {infoPost && infoPost.commentCount} Bình luận
+                                {
+                                // infoPost && infoPost.comments.length && `alo`
+                            }
+                        </p>
+
+                        <div style={{ flexDirection: "row", display: "flex" , marginBottom:30}}>
+                            <div style={{
+                                width: 80,
+                                height: 80,
+                                borderRadius: 40,
+                                overflow: 'hidden',
+                            }}>
+                                <img
+                                    style={{
+                                        width: '100%',
+                                        height: '100%',
+                                        objectFit:'cover'
+                                    }}
+                                    src=
+                                    {
+                                        this.props.infoUser.avatar ?
+                                            `${BASE_URL_AVATAR}/${this.props.infoUser.avatar.replace('"', '').replace('"', '')}`
+                                            :
+                                            "https://img.thehobbyblogger.com/2012/08/custom-avatar.png"
+                                    }
+                                    alt="" />
+                            </div>
+                            <textarea
+                                value={this.state.inputOfComment}
+                                onChange={this._handleOnchangeCmt}
+                                // type="textarea" 
+                                placeholder="Thêm bình luận ... "
+                                style={{
+                                    flex: 1,
+                                    marginLeft: 5,
+                                    paddingLeft: 10,
+                                    borderRadius:10,
+                                    borderWidth:0.5,
+                                    borderColor:'#fff',
+                                    outline:'none',
+                                    backgroundColor:'#e4eaf0',
+                                    padding:10
+                                }}
+                            />
+                            <button
+                                className="btn "
+                                style={{ margin: 5, width:100, fontSize:20, fontWeight:'bold', color:'#fff',backgroundColor:'#395180', outline:'none' }}
+                                onClick={this._handleSubmitComment}
+                            >
+                                Đăng
+                                </button>
+                        </div>
+
+                        {
+                            listCmtOwn && listCmtOwn.length > 0 &&
+                            listCmtOwn.map((item, index) => {
+                                return (
+                                    <ItemCmt key={index}
+
+                                        avatar={
+                                            this.props.infoUser.avatar ?
+                                                `${BASE_URL_AVATAR}/${this.props.infoUser.avatar.replace('"', '').replace('"', '')}`
+                                                :
+                                                `https://img.thehobbyblogger.com/2012/08/custom-avatar.png`
+                                        }
+                                        createdAt={item.createdAt}
+                                        fullname={item.user}
+                                        content={item.content}
+                                    />
+                                )
+                            })
+                        }
+
+                        {
+                            infoPost && infoPost.comments && infoPost.comments.length > 0 &&
+                            infoPost.comments.map((item, index) => {
+                                return (
+                                    <ItemCmt key={item.id}
+                                        avatar={
+                                            item.infoUser.avatar ?
+                                                `${BASE_URL_AVATAR}/${item.infoUser.avatar.replace('"', '').replace('"', '')}`
+                                                :
+                                                `https://img.thehobbyblogger.com/2012/08/custom-avatar.png`
+                                        }
+                                        createdAt={moment(item.created_at).format('DD/MM/YYYY HH:mm')}
+                                        fullname={`${item.infoUser.firstName} ${item.infoUser.lastName}`}
+                                        content={item.content}
+                                    />
+                                )
+                            }).reverse()
+                        }
+
+
+                        <div style={{ height: 250 }} />
+                        {/* </div> */}
 
                         {/* RIGHT */}
 
-                        <div className="col-4">
+                        {/* <div className="col-4">
 
 
-                        </div>
+                        </div> */}
                     </div>
                 </div>
 
@@ -227,17 +383,32 @@ class ItemCmt extends Component {
 
     render() {
         return (
-            <div style={{ flexDirection: "row", display: "flex", marginTop: 20 }}>
+            <div style={{ marginTop: 20, borderRadius: 10, display: "flex", flexDirection: 'row', alignItems: 'center', backgroundColor: '#e4eaf0', paddingLeft: 30, paddingTop: 20, paddingBottom: 20 }}>
                 <div style={{
-                    width: 50,
-                    height: 50,
-                    backgroundColor: "#828282"
+                    width: 80,
+                    height: 80,
+                    borderRadius: 40,
+                    overflow: 'hidden'
                 }}>
-
+                    <img
+                        style={{
+                            width: '100%',
+                            height: '100%',
+                            objectFit:'cover'
+                        }}
+                        src={this.props.avatar} alt="" />
                 </div>
-                <div style={{ flex: 1 }}>
-                    <p style={{ margin: 0, marginLeft: 10, padding: 0, color: '#395180', fontWeight: "bold" }}>{this.props.fullname}</p>
-                    <p style={{ marginLeft: 10 }}>{this.props.content}</p>
+                <div style={{ flex: 1, marginLeft: 20 }}>
+                    <div style={{
+                        display: 'flex',
+                        // alignItems:'flex-end'
+                        marginBottom: 5
+                    }}>
+                        <p style={{ margin: 0, marginLeft: 10, padding: 0, color: '#395180', fontWeight: "bold" }}>{`${this.props.fullname}`} </p>
+                        <p style={{ margin: 0, marginLeft: 5, fontSize: 12, color: '#828282' }}>{`-${this.props.createdAt}`}</p>
+                    </div>
+
+                    <p style={{ margin: 0, marginLeft: 10 }}>{this.props.content}</p>
                 </div>
 
             </div>

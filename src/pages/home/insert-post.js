@@ -22,15 +22,18 @@ import '../../../node_modules/bootstrap/dist/css/bootstrap.css';
 import ImageUploader from 'react-images-upload';
 import { MAIN_COLOR } from '../../constants/color';
 import Axios from 'axios';
+import { connect } from 'react-redux'
 import { BASE_URL } from '../../constants/url'
 
-class App extends React.Component {
+
+class InsertPost extends React.Component {
     constructor() {
         super();
 
         this.state = {
             stringOutput: '',
             pictures: [],
+            currTypeOfFilm: 1
         }
     }
 
@@ -66,7 +69,7 @@ class App extends React.Component {
         })
     }
     _handleConfirmPost = () => {
-
+        // this.props.history.push(`/info-user/${this.props.infoUser.id}`)
 
         let tokenStorage = localStorage.getItem('token')
         console.log(tokenStorage);
@@ -79,12 +82,13 @@ class App extends React.Component {
         let bodyFormData = new FormData();
 
         bodyFormData.append('nameFilm', this.state.title);
+        bodyFormData.append('filmType', this.state.currTypeOfFilm);
         bodyFormData.append('title', this.state.desciption)
         bodyFormData.append('content', this.state.stringOutput)
         bodyFormData.append('picture', this.state.pictures[0])
 
-        
-        
+
+
 
         Axios({
             method: "POST",
@@ -101,14 +105,19 @@ class App extends React.Component {
             }
 
         }).then(res => {
-
-            console.log(res.data);
-
+            alert('Đăng bài thành công')
+            this.props.history.push(`/info-user/${this.props.infoUser.id}`)
         }).catch(err => {
             console.log(bodyFormData);
-            
+
             console.log({ ...err });
 
+        })
+    }
+
+    handleChangeTypeOfFilm = (event) => {
+        this.setState({
+            currTypeOfFilm: event.target.value
         })
     }
 
@@ -134,6 +143,14 @@ class App extends React.Component {
                                 <label for="usr">Nhập mô tả ngắn về phim:</label>
                                 <textarea name="desciption" onChange={this._handleOnchangeText} style={{ width: "100%" }} className="form-control" rows={3} placeholder="What's up?" required defaultValue={""} />
                             </div>
+                            <div style={{ width: "100%" }} className="form-group">
+                                Chọn thể loại phim:
+                                <select value={this.state.currTypeOfFilm} onChange={this.handleChangeTypeOfFilm}>
+                                    <option value={1}>Hành động</option>
+                                    <option value={2}>Lãng mạn</option>
+                                    <option value={3}>Kinh dị</option>
+                                </select>
+                            </div>
                         </div>
 
                         <ImageUploader
@@ -152,7 +169,7 @@ class App extends React.Component {
 
 
 
-                    <p>Điền nội dung film:</p>
+                    <p style={{ marginTop: 80 }}>Điền nội dung film:</p>
                     <ReactSummernote
                         // value={this.props.currentPost.text}
                         options={{
@@ -182,19 +199,21 @@ class App extends React.Component {
                     </div>
                 </div>
 
-                <div className="container">
+                {/* <div className="container">
                     {
                         this.state.show &&
                         <div dangerouslySetInnerHTML={{ __html: this.state.stringOutput }}>
 
                         </div>
                     }
-                </div>
+                </div> */}
 
 
             </div >
         );
     }
 }
-
-export default App;
+const mapStateToProps = state => ({
+    infoUser: state.userReducer.infoUser
+});
+export default connect(mapStateToProps, null)(InsertPost);

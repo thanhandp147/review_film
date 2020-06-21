@@ -5,7 +5,9 @@ let initialState = {
 
     },
     isShowModalLogin: false,
-    isShowModalSignin:false
+    isShowModalSignin: false,
+    isShowModalForgotPass: false,
+    isShowModalProfile: false
 };
 
 const userReducer = (state = initialState, action) => {
@@ -33,8 +35,19 @@ const userReducer = (state = initialState, action) => {
         case ActionType.SHOW_MODAL_SIGNIN:
             return {
                 ...state,
-                isShowModalLogin:false,
+                isShowModalLogin: false,
                 isShowModalSignin: true
+            }
+        case ActionType.SHOW_MODAL_FORGOT_PASS:
+            return {
+                ...state,
+                isShowModalLogin: false,
+                isShowModalForgotPass: true
+            }
+        case ActionType.SHOW_MODAL_PROFILE:
+            return {
+                ...state,
+                isShowModalProfile: true
             }
         case ActionType.HIDE_MODAL_LOGIN:
             return {
@@ -45,6 +58,22 @@ const userReducer = (state = initialState, action) => {
             return {
                 ...state,
                 isShowModalSignin: false
+            }
+        case ActionType.HIDE_MODAL_FORGOT_PASS:
+            return {
+                ...state,
+                isShowModalForgotPass: false
+            }
+        case ActionType.HIDE_MODAL_PROFILE:
+            return {
+                ...state,
+                isShowModalProfile: false
+            }
+        case ActionType.CHANGE_AVATAR:
+
+            return {
+                ...state,
+                infoUser: { ...state.infoUser, avatar: action.payload }
             }
         default:
             return { ...state };

@@ -12,6 +12,19 @@ import AdminTemplate from "./templates/AdminTemplate";
 import Admin from "./pages/admin/admin";
 import ModalLogin from './components/modal-login';
 import ModalSignin from './components/modal-signin';
+import ModalForgotPass from './components/modal-forgot-pass'
+import ModalProfile from './components/modal-profile'
+import moment from 'moment';
+import localVI from 'moment/locale/vi';
+
+import createHistory from "history/createBrowserHistory"
+import { ConnectedRouter } from 'react-router-redux'
+export const history = createHistory()
+history.listen((location, action) => {
+  window.scrollTo(0, 0)
+})
+
+moment.locale('vi', localVI);
 
 
 
@@ -48,25 +61,31 @@ const showMenuAdmin = routes => {
 function App() {
   return (
     <BrowserRouter>
-      <div>
-        <ModalLogin />
-        <ModalSignin />
-        <Switch>
-          {showMenuHome(routesHome)}
-          {showMenuAdmin(routesAdmin)}
+      {/* <ConnectedRouter history={history}> */}
+        <div>
+          <ModalLogin />
+          <ModalSignin />
+          <ModalForgotPass />
+          <ModalProfile />
 
-          {/* Trang chu */}
-          {/* <Route path="/" exact component={Home} /> */}
-          {/* Trang About */}
-          {/* <Route path="/about" component={About} /> */}
-          {/* Trang ListMovie */}
-          {/* <Route path="/list-movie" component={ListMovie} /> */}
 
-          <Route path="/admin" component={Admin} />
-          {/* Trang PageNotFound - để cuối cùng*/}
-          <Route path="" component={PageNotFound} />
-        </Switch>
-      </div>
+          <Switch>
+            {showMenuHome(routesHome)}
+            {showMenuAdmin(routesAdmin)}
+
+            {/* Trang chu */}
+            {/* <Route path="/" exact component={Home} /> */}
+            {/* Trang About */}
+            {/* <Route path="/about" component={About} /> */}
+            {/* Trang ListMovie */}
+            {/* <Route path="/list-movie" component={ListMovie} /> */}
+
+            <Route path="/admin" component={Admin} />
+            {/* Trang PageNotFound - để cuối cùng*/}
+            <Route path="" component={PageNotFound} />
+          </Switch>
+        </div>
+      {/* </ConnectedRouter> */}
     </BrowserRouter>
   );
 }

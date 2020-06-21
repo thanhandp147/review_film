@@ -4,6 +4,7 @@ import ListMovie from "./pages/home/list-movie";
 import DetailMovie from "./pages/home/detail-movie";
 import InsertPost from './pages/home/insert-post'
 import InfoPost from './pages/home/InfoPost'
+import InfoUser from './pages/home/info-user'
 // import HOC from "./HOC";
 import Dashboard from "./pages/admin/dashboard";
 // import ThemNguoiDung from "./pages/admin/them-nguoi-dung";
@@ -40,6 +41,11 @@ const routesHome = [
     path: "/info-post/:id",
     exact: false,
     component: InfoPost
+  },
+  {
+    path: '/info-user/:id',
+    exact: false,
+    component: InfoUser
   }
 ];
 

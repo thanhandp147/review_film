@@ -3,6 +3,7 @@ import { NavLink } from "react-router-dom";
 import { connect } from 'react-redux'
 import Store from '../redux/store'
 import * as ActionType from '../redux/constants/ActionType'
+import { BASE_URL_AVATAR } from '../constants/url'
 
 class navbar extends Component {
   constructor() {
@@ -46,15 +47,28 @@ class navbar extends Component {
     })
   }
 
+  _handleShowProfile = () => {
+    Store.dispatch({
+      type: ActionType.SHOW_MODAL_PROFILE,
+      payload: null
+    })
+  }
+
 
   render() {
     console.log(this.props.infoUser);
 
     return (
-      <nav className="navbar fixed-top navbar-expand-md bg-dark navbar-dark">
+      <nav className="navbar fixed-top navbar-expand-md " style={{ backgroundColor: '#0f2234' }} >
         <div className="container">
 
-          <a className="navbar-brand" href="#">REVIEW-FILM</a>
+          <a className="navbar-brand" href="#" style={{ color: 'red' }} >
+            <img
+            style={{
+              height:50
+            }}
+            src="https://boostifythemes.com/demo/html/bustter/images/logo1.png" alt="" />
+          </a>
           <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span className="navbar-toggler-icon" />
           </button>
@@ -65,6 +79,11 @@ class navbar extends Component {
                   activeClassName="active"
                   exact
                   className="nav-link"
+                  style={{
+                    color: 'grey',
+                    fontWeight: '500',
+                    fontSize: 20
+                  }}
                   to="/">
                   Trang chủ
                 </NavLink>
@@ -74,6 +93,11 @@ class navbar extends Component {
                   onClick={this.handleClick}
                   activeClassName="active"
                   className="nav-link"
+                  style={{
+                    color: 'grey',
+                    fontWeight: '500',
+                    fontSize: 20
+                  }}
                   to="/insert-post"
                 >
                   Đăng bài
@@ -94,7 +118,7 @@ class navbar extends Component {
                   </li>
               } */}
 
-              <li className="nav-item">
+              {/* <li className="nav-item">
                 <NavLink
                   activeClassName="active"
                   className="nav-link"
@@ -102,7 +126,7 @@ class navbar extends Component {
                 >
                   List Movie
               </NavLink>
-              </li>
+              </li> */}
             </ul>
             <form className="form-inline my-2 my-lg-0">
               <input className="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" />
@@ -121,10 +145,34 @@ class navbar extends Component {
             {
               this.props.infoUser && this.props.infoUser.username !== undefined ?
                 <ul style={{ marginLeft: 60 }} class="navbar-nav">
-                  <li className="nav-item dropdown">
-                    <a className="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                      {`Xin chào ${this.props.infoUser.last_name}`}
-                    </a>
+                  <li className="nav-item dropdown" style={{display:'flex'}}>
+                    {/* <div style={{display:'flex'}}> */}
+                      <div style={{
+                        width: 40,
+                        height: 40,
+                        borderRadius: 20,
+                        overflow: 'hidden',
+                        marginRight:10
+                      }}>
+                        <img
+                          style={{
+                            width: '100%',
+                            height: '100%',
+                            objectFit: 'cover'
+                          }}
+                          src=
+                          {
+                            this.props.infoUser.avatar ?
+                              `${BASE_URL_AVATAR}/${this.props.infoUser.avatar.replace('"', '').replace('"', '')}`
+                              :
+                              "https://img.thehobbyblogger.com/2012/08/custom-avatar.png"
+                          }
+                          alt="" />
+                      </div>
+                      <a className="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style={{color:'#fff', fontWeight:'500', fontSize:20}}>
+                        {`${this.props.infoUser.first_name} ${this.props.infoUser.last_name}`}
+                      </a>
+                    {/* </div> */}
                     <div className="dropdown-menu" aria-labelledby="navbarDropdown">
                       <a onClick={this._handleLogout} class="dropdown-item" href="#">
                         {/* <NavLink
@@ -135,6 +183,16 @@ class navbar extends Component {
                         >
                         </NavLink> */}
                         Đăng xuất
+                      </a>
+                      <a onClick={this._handleShowProfile} class="dropdown-item" href="#">
+                        {/* <NavLink
+                          activeClassName="active"
+                          className="nav-link dropdown-item"
+                          to="#"
+                          style={{ color: '#000000' }}
+                        >
+                        </NavLink> */}
+                        Xem profile
                       </a>
                     </div>
                   </li>
