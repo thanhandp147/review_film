@@ -323,7 +323,7 @@ class home extends Component {
                     color: '#dcf836',
                     fontSize: 20,
                     fontWeight: "500",
-                    marginTop:50
+                    marginTop: 50
                   }}>
                   Phim hành động
                 </p>
@@ -703,7 +703,19 @@ class home extends Component {
           <p style={{fontSize:20, color:'#fff'}}>KKKKKKKK</p>
         </div> */}
         <div style={{ backgroundImage: `url(${BackGround})`, height: 300 }}>
-          <img src="https://boostifythemes.com/demo/html/bustter/images/logo1.png" alt="" />
+          <a target='_blank' href="https://dungtran.top/">
+            <p style={{
+              paddingTop:20,
+              fontSize: 25,
+              fontWeight: '500',
+              color: '#dd003f',
+              margin: 0,
+              textAlign: 'center'
+            }}>
+              DUNGTRAN.TOP
+          </p>
+          </a>
+          <img style={{ width: '100%', height: '100%', objectFit: 'cover' }} src={require('../../image/footerfake.png')} alt="" />
         </div>
       </>
     );

@@ -225,7 +225,7 @@ class modalogin extends Component {
                         <div className="form-group">
                             <label htmlFor="">Mật khẩu</label>
                             <input
-                                type="text"
+                                type="password"
                                 className="form-control"
                                 name="password"
                                 onChange={this.handleOnChange}

@@ -4,6 +4,7 @@ import Store from '../redux/store'
 import * as ActionType from "../redux/constants/ActionType";
 import { Modal, Button } from 'react-bootstrap'
 import { connect } from 'react-redux'
+import { NavLink, Link } from "react-router-dom";
 
 import { login } from '../../src/services/api'
 import { handleApi } from '../services/utils';
@@ -128,14 +129,19 @@ class modalProfile extends Component {
                                 Đổi ảnh đại diện
                             </button>
                         </div>
-                        <p style={{
-                            fontSize: 26,
-                            marginLeft: 45,
-                            fontWeight: '500',
-                            color: '#395180'
-                        }}>
-                            {`${this.props.infoUser.first_name} ${this.props.infoUser.last_name} `}
-                        </p>
+
+                        <Link
+                            onClick={this.handleClose}
+                            to={`/info-user/${this.props.infoUser.id}`}>
+                            <p style={{
+                                fontSize: 26,
+                                marginLeft: 45,
+                                fontWeight: '500',
+                                color: '#395180'
+                            }}>
+                                {`${this.props.infoUser.first_name} ${this.props.infoUser.last_name} `}
+                            </p>
+                        </Link>
 
                         <div style={{ display: 'flex' }}>
                             <p style={{

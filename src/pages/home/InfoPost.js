@@ -9,6 +9,7 @@ import { BASE_URL, BASE_URL_AVATAR } from '../../constants/url'
 import BackGroundSlider from '../../image/slider-bg.jpg'
 import moment from 'moment';
 import { FaThumbsUp } from 'react-icons/fa';
+import { NavLink, Link } from "react-router-dom";
 
 class InfoPost extends Component {
 
@@ -195,26 +196,19 @@ class InfoPost extends Component {
             <div style={{ backgroundColor: '#020d18' }}>
                 <div style={{ height: 70 }}></div>
                 <div style={{ backgroundImage: `url(${BackGroundSlider})`, height: 150, objectFit: 'cover' }}></div>
-                <div className="container" style={{backgroundColor:'#fff', borderRadius:20, marginTop:20}}>
-                    <div style={{padding:100}}>
+                <div className="container" style={{ backgroundColor: '#fff', borderRadius: 20, marginTop: 20 }}>
+                    <div style={{ padding: 100 }}>
                         <h1 style={{
                             marginTop: 20,
                             marginBottom: 20
                         }}>
-                            {infoPost.nameFilm}
+                            {infoPost?.nameFilm}
                         </h1>
 
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                            <p style={{ padding: 0, color:'#dd003f'}}>
+                            <p style={{ margin: 0, padding: 0, color: '#828282' }}>
                                 Đăng lúc {moment(infoPost.createdAt).format('L')}
-                                {` bởi ${infoPost.user?.firstName} ${infoPost.user?.lastName}`}
                             </p>
-
-                            {/* <div style={{ display: 'flex', alignItems: 'center', color: 'red' }}>
-
-                                100
-                              </div> */}
-
 
                             <div style={{ display: 'flex' }}>
                                 {
@@ -222,19 +216,36 @@ class InfoPost extends Component {
                                         <button
                                             onClick={this._handleUnPost}
                                             className="btn "
-                                            style={{ margin: 20 , backgroundColor:'#f5b50c', color:'#fff', fontWeight:'bold', boxShadow:'none', outline:'none'}}>
+                                            style={{ margin: 20, backgroundColor: '#f5b50c', color: '#fff', fontWeight: 'bold', boxShadow: 'none', outline: 'none' }}>
                                             Đã thích
                                         </button>
                                         :
                                         <button
                                             onClick={this._handleLikePost}
                                             className="btn"
-                                            style={{ margin: 20 , backgroundColor:'#395180', color:'#fff', fontWeight:'bold', boxShadow:'none', outline:'none'}}>
+                                            style={{ margin: 20, backgroundColor: '#395180', color: '#fff', fontWeight: 'bold', boxShadow: 'none', outline: 'none' }}>
                                             Thích
                                         </button>
                                 }
 
                             </div>
+                        </div>
+
+                        <div style={{ display: 'flex', alignItems: "center", marginBottom: 20 }}>
+                            <img style={{ borderRadius: 20, height: 40, width: 40, objectFit: "cover" }}
+                                src={
+                                    infoPost?.user?.avatar ?
+                                        `${BASE_URL_AVATAR}/${infoPost.user.avatar.replace('"', '').replace('"', '')}`
+                                        :
+                                        `https://img.thehobbyblogger.com/2012/08/custom-avatar.png`
+                                }
+                                alt="" />
+                            <Link
+                                to={`/info-user/${infoPost?.user?.id}`}>
+                                <p style={{ padding: 0, color: '#4180bf', margin: 0, fontWeight: 'bold', marginLeft: 15, fontSize: 20 }}>
+                                    {`${infoPost.user?.firstName} ${infoPost.user?.lastName}`}
+                                </p>
+                            </Link>
                         </div>
 
                         <div style={{ display: 'flex', flexDirection: 'row' }}>
@@ -254,7 +265,7 @@ class InfoPost extends Component {
                             width: "100%",
                             height: 0.25,
                             backgroundColor: '#e4eaf0',
-                            marginTop:50
+                            marginTop: 50
                         }} />
 
                         <p style={{
@@ -268,7 +279,7 @@ class InfoPost extends Component {
                             }
                         </p>
 
-                        <div style={{ flexDirection: "row", display: "flex" , marginBottom:30}}>
+                        <div style={{ flexDirection: "row", display: "flex", marginBottom: 30 }}>
                             <div style={{
                                 width: 80,
                                 height: 80,
@@ -279,7 +290,7 @@ class InfoPost extends Component {
                                     style={{
                                         width: '100%',
                                         height: '100%',
-                                        objectFit:'cover'
+                                        objectFit: 'cover'
                                     }}
                                     src=
                                     {
@@ -299,17 +310,17 @@ class InfoPost extends Component {
                                     flex: 1,
                                     marginLeft: 5,
                                     paddingLeft: 10,
-                                    borderRadius:10,
-                                    borderWidth:0.5,
-                                    borderColor:'#fff',
-                                    outline:'none',
-                                    backgroundColor:'#e4eaf0',
-                                    padding:10
+                                    borderRadius: 10,
+                                    borderWidth: 0.5,
+                                    borderColor: '#fff',
+                                    outline: 'none',
+                                    backgroundColor: '#e4eaf0',
+                                    padding: 10
                                 }}
                             />
                             <button
                                 className="btn "
-                                style={{ margin: 5, width:100, fontSize:20, fontWeight:'bold', color:'#fff',backgroundColor:'#395180', outline:'none' }}
+                                style={{ margin: 5, width: 100, fontSize: 20, fontWeight: 'bold', color: '#fff', backgroundColor: '#395180', outline: 'none' }}
                                 onClick={this._handleSubmitComment}
                             >
                                 Đăng
@@ -394,7 +405,7 @@ class ItemCmt extends Component {
                         style={{
                             width: '100%',
                             height: '100%',
-                            objectFit:'cover'
+                            objectFit: 'cover'
                         }}
                         src={this.props.avatar} alt="" />
                 </div>
