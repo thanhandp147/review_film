@@ -1,6 +1,6 @@
-import React from "react";
+import React, { Component } from 'react';
 // import "./App.css";
-import { BrowserRouter, Route, Switch } from "react-router-dom";
+import { BrowserRouter, Route, Switch, withRouter } from "react-router-dom";
 
 // import Home from "./pages/home/home";
 // import About from "./pages/home/about";
@@ -19,6 +19,7 @@ import localVI from 'moment/locale/vi';
 
 import createHistory from "history/createBrowserHistory"
 import { ConnectedRouter } from 'react-router-redux'
+
 export const history = createHistory()
 history.listen((location, action) => {
   window.scrollTo(0, 0)
@@ -58,10 +59,15 @@ const showMenuAdmin = routes => {
   }
 };
 
-function App() {
-  return (
-    <BrowserRouter>
-      {/* <ConnectedRouter history={history}> */}
+class App extends Component {
+
+
+  render() {
+    
+
+    return (
+      <BrowserRouter>
+        {/* <ConnectedRouter history={history}> */}
         <div>
           <ModalLogin />
           <ModalSignin />
@@ -82,12 +88,13 @@ function App() {
 
             <Route path="/admin" component={Admin} />
             {/* Trang PageNotFound - để cuối cùng*/}
-            <Route path="" component={PageNotFound} />
+            <Route  path="" component={PageNotFound} />
           </Switch>
         </div>
-      {/* </ConnectedRouter> */}
-    </BrowserRouter>
-  );
+        {/* </ConnectedRouter> */}
+      </BrowserRouter>
+    );
+  }
 }
 
 export default App;

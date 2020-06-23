@@ -22,6 +22,8 @@ class InfoPost extends Component {
     }
 
     componentDidMount() {
+        window.scrollTo(0, 0)
+
         console.log(this.props.match.params);
         let _idPost = this.props.match.params.id
 

@@ -25,6 +25,7 @@ class InfoUser extends Component {
     }
 
     componentDidMount() {
+        window.scrollTo(0, 0)
         let tokenStorage = localStorage.getItem('token')
 
         let Authorization
