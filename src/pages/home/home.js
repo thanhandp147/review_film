@@ -43,7 +43,7 @@ class home extends Component {
     }).then(res => {
 
       let topUser = res.data.data
-      console.log(topUser);
+      console.log({topUser});
       topUser = topUser.filter(item => {
         return item.numberLike !== 0 && item.numberPost !== 0
       })
@@ -345,7 +345,7 @@ class home extends Component {
                                 <img style={{ borderRadius: 10, height: "100%", width: "100%", objectFit: "cover" }}
                                   src={
                                     item[0].picture &&
-                                    `http://re-flim.azurewebsites.net/uploads/${item[0].picture.replace('"', '').replace('"', '')}`
+                                    `${BASE_URL}/uploads/${item[0].picture.replace('"', '').replace('"', '')}`
                                   }
                                   alt="" />
                               </Link>
@@ -358,7 +358,7 @@ class home extends Component {
                                   <img style={{ borderRadius: 10, height: "100%", width: "100%", objectFit: "cover" }}
                                     src={
                                       item[1].picture &&
-                                      `http://re-flim.azurewebsites.net/uploads/${item[1].picture.replace('"', '').replace('"', '')}`
+                                      `${BASE_URL}/uploads/${item[1].picture.replace('"', '').replace('"', '')}`
                                     }
                                     alt="" />
                                 </Link>
@@ -373,7 +373,7 @@ class home extends Component {
                                   <img style={{ borderRadius: 10, height: "100%", width: "100%", objectFit: "cover" }}
                                     src={
                                       item[2].picture &&
-                                      `http://re-flim.azurewebsites.net/uploads/${item[2].picture.replace('"', '').replace('"', '')}`
+                                      `${BASE_URL}/uploads/${item[2].picture.replace('"', '').replace('"', '')}`
                                     }
                                     alt="" />
                                 </Link>
@@ -387,7 +387,7 @@ class home extends Component {
                                   <img style={{ borderRadius: 10, height: "100%", width: "100%", objectFit: "cover" }}
                                     src={
                                       item[3].picture &&
-                                      `http://re-flim.azurewebsites.net/uploads/${item[3].picture.replace('"', '').replace('"', '')}`
+                                      `${BASE_URL}/uploads/${item[3].picture.replace('"', '').replace('"', '')}`
                                     }
                                     alt="" />
                                 </Link>
@@ -428,7 +428,7 @@ class home extends Component {
                                 <img style={{ borderRadius: 10, height: "100%", width: "100%", objectFit: "cover" }}
                                   src={
                                     item[0].picture &&
-                                    `http://re-flim.azurewebsites.net/uploads/${item[0].picture.replace('"', '').replace('"', '')}`
+                                    `${BASE_URL}/uploads/${item[0].picture.replace('"', '').replace('"', '')}`
                                   }
                                   alt="" />
                               </Link>
@@ -441,7 +441,7 @@ class home extends Component {
                                   <img style={{ borderRadius: 10, height: "100%", width: "100%", objectFit: "cover" }}
                                     src={
                                       item[1].picture &&
-                                      `http://re-flim.azurewebsites.net/uploads/${item[1].picture.replace('"', '').replace('"', '')}`
+                                      `${BASE_URL}/uploads/${item[1].picture.replace('"', '').replace('"', '')}`
                                     }
                                     alt="" />
                                 </Link>
@@ -456,7 +456,7 @@ class home extends Component {
                                   <img style={{ borderRadius: 10, height: "100%", width: "100%", objectFit: "cover" }}
                                     src={
                                       item[2].picture &&
-                                      `http://re-flim.azurewebsites.net/uploads/${item[2].picture.replace('"', '').replace('"', '')}`
+                                      `${BASE_URL}/uploads/${item[2].picture.replace('"', '').replace('"', '')}`
                                     }
                                     alt="" />
                                 </Link>
@@ -470,7 +470,7 @@ class home extends Component {
                                   <img style={{ borderRadius: 10, height: "100%", width: "100%", objectFit: "cover" }}
                                     src={
                                       item[3].picture &&
-                                      `http://re-flim.azurewebsites.net/uploads/${item[3].picture.replace('"', '').replace('"', '')}`
+                                      `${BASE_URL}/uploads/${item[3].picture.replace('"', '').replace('"', '')}`
                                     }
                                     alt="" />
                                 </Link>
@@ -511,7 +511,7 @@ class home extends Component {
                                 <img style={{ borderRadius: 10, height: "100%", width: "100%", objectFit: "cover" }}
                                   src={
                                     item[0].picture &&
-                                    `http://re-flim.azurewebsites.net/uploads/${item[0].picture.replace('"', '').replace('"', '')}`
+                                    `${BASE_URL}/uploads/${item[0].picture.replace('"', '').replace('"', '')}`
                                   }
                                   alt="" />
                               </Link>
@@ -524,7 +524,7 @@ class home extends Component {
                                   <img style={{ borderRadius: 10, height: "100%", width: "100%", objectFit: "cover" }}
                                     src={
                                       item[1].picture &&
-                                      `http://re-flim.azurewebsites.net/uploads/${item[1].picture.replace('"', '').replace('"', '')}`
+                                      `${BASE_URL}/uploads/${item[1].picture.replace('"', '').replace('"', '')}`
                                     }
                                     alt="" />
                                 </Link>
@@ -539,7 +539,7 @@ class home extends Component {
                                   <img style={{ borderRadius: 10, height: "100%", width: "100%", objectFit: "cover" }}
                                     src={
                                       item[2].picture &&
-                                      `http://re-flim.azurewebsites.net/uploads/${item[2].picture.replace('"', '').replace('"', '')}`
+                                      `${BASE_URL}/uploads/${item[2].picture.replace('"', '').replace('"', '')}`
                                     }
                                     alt="" />
                                 </Link>
@@ -553,7 +553,7 @@ class home extends Component {
                                   <img style={{ borderRadius: 10, height: "100%", width: "100%", objectFit: "cover" }}
                                     src={
                                       item[3].picture &&
-                                      `http://re-flim.azurewebsites.net/uploads/${item[3].picture.replace('"', '').replace('"', '')}`
+                                      `${BASE_URL}/uploads/${item[3].picture.replace('"', '').replace('"', '')}`
                                     }
                                     alt="" />
                                 </Link>
@@ -677,7 +677,7 @@ class home extends Component {
                             item.user.avatar ?
                               `${BASE_URL_AVATAR}/${item.user.avatar.replace('"', '').replace('"', '')}`
                               :
-                              `https://img.thehobbyblogger.com/2012/08/custom-avatar.png`
+                              require('../../image/avatar.png')
                           }
                           fullname={`${item.user.firstName} ${item.user.lastName}`}
                           totalPost={item.numberPost}
@@ -705,7 +705,7 @@ class home extends Component {
         <div style={{ backgroundImage: `url(${BackGround})`, height: 300 }}>
           <a target='_blank' href="https://dungtran.top/">
             <p style={{
-              paddingTop:20,
+              paddingTop: 20,
               fontSize: 25,
               fontWeight: '500',
               color: '#dd003f',

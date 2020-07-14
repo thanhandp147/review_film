@@ -17,7 +17,8 @@ class InfoPost extends Component {
         super();
         this.state = {
             infoPost: {},
-            listCmtOwn: []
+            listCmtOwn: [],
+            listReplyComent: []
         }
     }
 
@@ -190,6 +191,105 @@ class InfoPost extends Component {
         })
     }
 
+    hanldeReplyCmt = (item) => {
+        console.log({ item });
+        this.setState({
+            itemCurrCmtReply: item,
+            idCurrCmtReply: item.id
+        }, () => {
+        })
+
+    }
+
+    onChangeReplyComment = (e) => {
+        this.setState({
+            contentReplyComent: e.target.value
+        })
+    }
+    _handleSubmitReplyComment = () => {
+        let itemReplyComent = {
+            authorComent: this.state.itemCurrCmtReply,
+            content: this.state.contentReplyComent
+        }
+
+        this.setState({
+            listReplyComent: [
+                ...this.state.listReplyComent,
+                itemReplyComent
+            ]
+        })
+
+        let tokenStorage = localStorage.getItem('token')
+        let Authorization
+        if (tokenStorage) {
+            Authorization = `Token ${tokenStorage}`
+        } else {
+            alert('Bạn cần phải đăng nhập để thực hiện chức năng này')
+            return Authorization = null
+        }
+
+        let data = {
+            postId: this.state.infoPost.id,
+            parentId: this.state.idCurrCmtReply,
+            content: this.state.contentReplyComent
+        }
+
+        console.log({ data });
+
+        Axios({
+            method: "POST",
+            url: `${BASE_URL}/posts/create-comment/`,
+            headers: {
+                'Authorization': Authorization,
+                "Content-Type": "application/json"
+            },
+            data: {
+                postId: this.state.infoPost.id,
+                parentId: this.state.idCurrCmtReply,
+                content: this.state.contentReplyComent
+            }
+        }).then(res => {
+            console.log({ ...res })
+        }).catch(err => {
+            console.log({ ...err });
+        })
+
+    }
+
+    _handleDeletePost = () => {
+        let tokenStorage = localStorage.getItem('token')
+        let Authorization
+        if (tokenStorage) {
+            Authorization = `Token ${tokenStorage}`
+        } else {
+            alert('Bạn cần phải đăng nhập để thực hiện chức năng này')
+            return Authorization = null
+        }
+
+        let data = {
+            postId: this.state.infoPost.id,
+            parentId: this.state.idCurrCmtReply,
+            content: this.state.contentReplyComent
+        }
+
+        console.log({ data });
+
+        Axios({
+            method: "DELETE",
+            url: `${BASE_URL}/posts/delete/${this.state.infoPost.id}`,
+            headers: {
+                'Authorization': Authorization,
+                "Content-Type": "application/json"
+            },
+        }).then(res => {
+            console.log({ ...res })
+            alert("Xoá thành công!")
+            this.props.history.push(`/`)
+        }).catch(err => {
+            console.log({ ...err });
+        })
+    }
+
 
 
     render() {
@@ -229,7 +329,15 @@ class InfoPost extends Component {
                                             Thích
                                         </button>
                                 }
-
+                                {
+                                    this.props.infoUser.isAdmin &&
+                                    <button
+                                        onClick={this._handleDeletePost}
+                                        className="btn"
+                                        style={{ margin: 20, backgroundColor: 'red', color: '#fff', fontWeight: 'bold', boxShadow: 'none', outline: 'none' }}>
+                                        Xoá
+                                    </button>
+                                }
                             </div>
                         </div>
 
@@ -363,6 +471,15 @@ class InfoPost extends Component {
                                         createdAt={moment(item.created_at).format('DD/MM/YYYY HH:mm')}
                                         fullname={`${item.infoUser.firstName} ${item.infoUser.lastName}`}
                                         content={item.content}
+                                        hanldeReplyCmt={() => this.hanldeReplyCmt(item)}
+                                        isReply={this.state.idCurrCmtReply == item.id ? true : false}
+                                        avatarAuthor={this.props.infoUser.avatar}
+                                        onChangeReplyComment={this.onChangeReplyComment}
+                                        contentReplyComent={this.state.contentReplyComent}
+                                        _handleSubmitReplyComment={this._handleSubmitReplyComment}
+                                        listReplyComent={this.state.listReplyComent}
+                                        idComemt={item.id}
+                                        childComments={item.childrentComments}
                                     />
                                 )
                             }).reverse()
@@ -394,37 +511,189 @@ const styles = {
 
 class ItemCmt extends Component {
 
+
+
+
     render() {
         return (
-            <div style={{ marginTop: 20, borderRadius: 10, display: "flex", flexDirection: 'row', alignItems: 'center', backgroundColor: '#e4eaf0', paddingLeft: 30, paddingTop: 20, paddingBottom: 20 }}>
-                <div style={{
-                    width: 80,
-                    height: 80,
-                    borderRadius: 40,
-                    overflow: 'hidden'
-                }}>
-                    <img
-                        style={{
-                            width: '100%',
-                            height: '100%',
-                            objectFit: 'cover'
-                        }}
-                        src={this.props.avatar} alt="" />
-                </div>
-                <div style={{ flex: 1, marginLeft: 20 }}>
+            <>
+                <div style={{ marginTop: 20, borderRadius: 10, display: "flex", flexDirection: 'row', alignItems: 'center', backgroundColor: '#e4eaf0', paddingLeft: 30, paddingTop: 20, paddingBottom: 20 }}>
                     <div style={{
-                        display: 'flex',
-                        // alignItems:'flex-end'
-                        marginBottom: 5
+                        width: 80,
+                        height: 80,
+                        borderRadius: 40,
+                        overflow: 'hidden'
                     }}>
-                        <p style={{ margin: 0, marginLeft: 10, padding: 0, color: '#395180', fontWeight: "bold" }}>{`${this.props.fullname}`} </p>
-                        <p style={{ margin: 0, marginLeft: 5, fontSize: 12, color: '#828282' }}>{`-${this.props.createdAt}`}</p>
+                        <img
+                            style={{
+                                width: '100%',
+                                height: '100%',
+                                objectFit: 'cover'
+                            }}
+                            src={this.props.avatar} alt="" />
                     </div>
+                    <div style={{ flex: 1, marginLeft: 20 }}>
+                        <div style={{
+                            display: 'flex',
+                            // alignItems:'flex-end'
+                            marginBottom: 5
+                        }}>
+                            <p style={{ margin: 0, marginLeft: 10, padding: 0, color: '#395180', fontWeight: "bold" }}>{`${this.props.fullname}`} </p>
+                            <p style={{ margin: 0, marginLeft: 5, fontSize: 12, color: '#828282' }}>{`-${this.props.createdAt}`}</p>
+                        </div>
 
-                    <p style={{ margin: 0, marginLeft: 10 }}>{this.props.content}</p>
+                        <p style={{ marginLeft: 10 }}>{this.props.content}</p>
+
+                        <button onClick={this.props.hanldeReplyCmt} className="btn" style={{ padding: 10, borderRadius: 15, marginLeft: 10, color: '#abb7c4' }}>
+                            + REPLY
+                    </button>
+                        {/* <p style={{ margin: 0, marginLeft: 10 }}></p> */}
+                    </div>
                 </div>
 
-            </div>
+                {
+                    this.props.childComments && this.props.childComments.length > 0 &&
+                    this.props.childComments.map((item, index) => {
+                        return (
+                            <div style={{ width: '100%', paddingLeft: 50, marginTop: 5, marginBottom: 20 }}>
+                                <div style={{ marginTop: 20, borderRadius: 10, display: "flex", flexDirection: 'row', alignItems: 'center', backgroundColor: '#e4eaf0', paddingLeft: 30, paddingTop: 20, paddingBottom: 20 }}>
+                                    <div style={{
+                                        width: 50,
+                                        height: 50,
+                                        borderRadius: 25,
+                                        overflow: 'hidden'
+                                    }}>
+                                        <img
+                                            style={{
+                                                width: '100%',
+                                                height: '100%',
+                                                objectFit: 'cover'
+                                            }}
+                                            src={
+                                                item.infoUser.avatar ?
+                                                    `${BASE_URL_AVATAR}/${item.infoUser.avatar.replace('"', '').replace('"', '')}`
+                                                    :
+                                                    `https://img.thehobbyblogger.com/2012/08/custom-avatar.png`
+                                            } alt="" />
+                                    </div>
+                                    <div style={{ flex: 1, marginLeft: 20 }}>
+                                        <div style={{
+                                            display: 'flex',
+                                            // alignItems:'flex-end'
+                                            marginBottom: 5
+                                        }}>
+                                            <p style={{ margin: 0, marginLeft: 10, padding: 0, color: '#395180', fontWeight: "bold" }}>{`${item.infoUser.firstName} ${item.infoUser.lastName}`} </p>
+                                            {/* <p style={{ margin: 0, marginLeft: 5, fontSize: 12, color: '#828282' }}>{`-${this.props.createdAt}`}</p> */}
+                                        </div>
+
+                                        <p style={{ marginLeft: 10 }}>{item.content}</p>
+
+                                    </div>
+                                </div>
+                            </div>
+                        )
+                    })
+                }
+
+                {/* {
+                    this.props.listReplyComent && this.props.listReplyComent.length &&
+                    this.props.listReplyComent.map((item, index) => {
+                        console.log({ itemcon: item });
+
+                        if (item.authorComent.id == this.props.idComemt) {
+                            return (
+                                <div style={{ width: '100%', paddingLeft: 50, marginTop: 5, marginBottom: 20 }}>
+                                    <div style={{ marginTop: 20, borderRadius: 10, display: "flex", flexDirection: 'row', alignItems: 'center', backgroundColor: '#e4eaf0', paddingLeft: 30, paddingTop: 20, paddingBottom: 20 }}>
+                                        <div style={{
+                                            width: 80,
+                                            height: 80,
+                                            borderRadius: 40,
+                                            overflow: 'hidden'
+                                        }}>
+                                            <img
+                                                style={{
+                                                    width: '100%',
+                                                    height: '100%',
+                                                    objectFit: 'cover'
+                                                }}
+                                                src={this.props.avatar} alt="" />
+                                        </div>
+                                        <div style={{ flex: 1, marginLeft: 20 }}>
+                                            <div style={{
+                                                display: 'flex',
+                                                // alignItems:'flex-end'
+                                                marginBottom: 5
+                                            }}>
+                                                <p style={{ margin: 0, marginLeft: 10, padding: 0, color: '#395180', fontWeight: "bold" }}>{`${this.props.fullname}`} </p>
+                                                <p style={{ margin: 0, marginLeft: 5, fontSize: 12, color: '#828282' }}>{`-${this.props.createdAt}`}</p>
+                                            </div>
+
+                                            <p style={{ marginLeft: 10 }}>{this.props.content}</p>
+
+                                            <button onClick={this.props.hanldeReplyCmt} className="btn" style={{ padding: 10, borderRadius: 15, marginLeft: 10, color: '#abb7c4' }}>
+                                                + REPLY
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            )
+                        }
+                    })
+                }  */}
+
+                {
+                    this.props.isReply &&
+                    <div style={{ width: '100%', paddingLeft: 50, marginTop: 5, marginBottom: 20 }}>
+                        <div style={{ flexDirection: "row", display: "flex", marginBottom: 30 }}>
+                            <div style={{
+                                width: 50,
+                                height: 50,
+                                borderRadius: 25,
+                                overflow: 'hidden',
+                            }}>
+                                <img
+                                    style={{
+                                        width: '100%',
+                                        height: '100%',
+                                        objectFit: 'cover'
+                                    }}
+                                    src=
+                                    {
+                                        this.props.avatarAuthor ?
+                                            `${BASE_URL_AVATAR}/${this.props.avatarAuthor.replace('"', '').replace('"', '')}`
+                                            :
+                                            "https://img.thehobbyblogger.com/2012/08/custom-avatar.png"
+                                    }
+                                    alt="" />
+                            </div>
+                            <textarea
+                                value={this.props.contentReplyComent}
+                                onChange={this.props.onChangeReplyComment}
+                                type="textarea"
+                                placeholder="Thêm bình luận ... "
+                                style={{
+                                    flex: 1,
+                                    marginLeft: 5,
+                                    paddingLeft: 10,
+                                    borderRadius: 10,
+                                    borderWidth: 0.5,
+                                    borderColor: '#fff',
+                                    outline: 'none',
+                                    backgroundColor: '#e4eaf0',
+                                    padding: 10
+                                }}
+                            />
+                            <button
+                                className="btn "
+                                style={{ margin: 5, width: 100, fontSize: 20, fontWeight: 'bold', color: '#fff', backgroundColor: '#395180', outline: 'none' }}
+                                onClick={this.props._handleSubmitReplyComment}
+                            >
+                                Trả lời
+                                </button>
+                        </div>
+                    </div>
+                }
+            </>
         );
     }
 }
